@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import { Element, scroller } from "react-scroll";
 import {
   Button,
   Container,
@@ -16,6 +17,7 @@ import {
   Visibility
 } from "semantic-ui-react";
 
+import Link from "next/link";
 import { getHomepage } from "../utils/requests/home";
 
 const getWidth = () => {
@@ -23,8 +25,6 @@ const getWidth = () => {
 
   return isSSR ? Responsive.onlyTablet.minWidth : window.innerWidth;
 };
-
-const scrollToRef = ref => window.scrollTo(0, ref.current.offsetTop);
 
 const HomepageHeading = ({ heading, mobile }) => (
   <Container text>
@@ -61,7 +61,20 @@ class DesktopContainer extends Component {
 
   hideFixedMenu = () => this.setState({ fixed: false });
   showFixedMenu = () => this.setState({ fixed: true });
-
+  scrollToSections = () => {
+    scroller.scrollTo("sections", {
+      duration: 1500,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  };
+  scrollToContactUs = () => {
+    scroller.scrollTo("contactus", {
+      duration: 1500,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  };
   render() {
     const { children, heading } = this.props;
     const { fixed } = this.state;
@@ -101,11 +114,13 @@ class DesktopContainer extends Component {
                   </Button>
                 </Menu.Item> */}
                 <Menu.Item position="right">
-                  <Menu.Item as="a">تماس با ما</Menu.Item>
-                  <Menu.Item as="a">بخش ها</Menu.Item>
-                  <Menu.Item as="a" active>
-                    معرفی
+                  <Menu.Item onClick={this.scrollToContactUs} as="a">تماس با ما</Menu.Item>
+                  <Menu.Item onClick={this.scrollToSections} as="a">
+                    بخش ها
                   </Menu.Item>
+                  {/* <Menu.Item as="a" active>
+                    معرفی
+                  </Menu.Item> */}
                 </Menu.Item>
               </Container>
             </Menu>
@@ -149,9 +164,9 @@ class MobileContainer extends Component {
           visible={sidebarOpened}
           direction="right"
         >
-          <Menu.Item as="a" active>
+          {/* <Menu.Item as="a" active>
             معرفی
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item as="a">بخش ها</Menu.Item>
           <Menu.Item as="a">تماس با ما</Menu.Item>
           {/* <Menu.Item as="a">ورود</Menu.Item>
@@ -225,7 +240,9 @@ class Home extends Component {
               {section.title}
             </Header>
             <p style={{ fontSize: "1.33em" }}>{section.description}</p>
-            <Button size="huge">ورود به بخش</Button>
+            <a href={"/" + section.link_to}>
+              <Button size="huge">ورود به بخش</Button>
+            </a>
           </Grid.Column>
           <Grid.Column floated="right" width={6}>
             <Image
@@ -253,7 +270,9 @@ class Home extends Component {
               {section.title}
             </Header>
             <p style={{ fontSize: "1.33em" }}>{section.description}</p>
-            <Button size="huge">ورود به بخش</Button>
+            <a href={"/" + section.link_to}>
+              <Button size="huge">ورود به بخش</Button>
+            </a>
           </Grid.Column>
         </Grid.Row>
       );
@@ -264,14 +283,16 @@ class Home extends Component {
     const { heading, sections, contactUs, socialNetworks } = this.props;
     return (
       <ResponsiveContainer heading={heading}>
-        <Segment style={{ padding: "8em 0em" }} vertical>
-          <Grid container stackable verticalAlign="middle">
-            {sections.map((section, index) => {
-              return this.renderSection(section, index);
-            })}
-          </Grid>
-        </Segment>
-
+        <Element name="sections">
+          <Segment style={{ padding: "8em 0em" }} vertical>
+            <Grid container stackable verticalAlign="middle">
+              {sections.map((section, index) => {
+                return this.renderSection(section, index);
+              })}
+            </Grid>
+          </Segment>
+        </Element>
+        <Element name='contactus'>
         <Segment inverted vertical style={{ padding: "5em 0em" }}>
           <Container>
             <Grid divided inverted stackable>
@@ -279,8 +300,12 @@ class Home extends Component {
                 <Grid.Column width={8}>
                   <Header inverted as="h4" content="تماس با ما" />
                   <List link inverted>
-                    <List.Item as='li'>{contactUs.email + "  :ایمیل "}</List.Item>
-                    <List.Item as='li'>{contactUs.phone_number + "   :تلفن "}</List.Item>
+                    <List.Item as="li">
+                      {contactUs.email + "  :ایمیل "}
+                    </List.Item>
+                    <List.Item as="li">
+                      {contactUs.phone_number + "   :تلفن "}
+                    </List.Item>
                   </List>
                 </Grid.Column>
                 <Grid.Column width={8}>
@@ -291,6 +316,7 @@ class Home extends Component {
             </Grid>
           </Container>
         </Segment>
+        </Element>
       </ResponsiveContainer>
     );
   }
