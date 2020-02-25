@@ -17,6 +17,7 @@ import {
   Visibility
 } from "semantic-ui-react";
 
+import { BASE_ADDRESS } from '../utils/api';
 import Link from "next/link";
 import { getHomepage } from "../utils/requests/home";
 
@@ -249,7 +250,7 @@ class Home extends Component {
               bordered
               rounded
               size="large"
-              src={require("../public/images/white-image.png")}
+              src={BASE_ADDRESS + section.image}
             />
           </Grid.Column>
         </Grid.Row>
@@ -262,7 +263,7 @@ class Home extends Component {
               bordered
               rounded
               size="large"
-              src={require("../public/images/white-image.png")}
+              src={BASE_ADDRESS + section.image}
             />
           </Grid.Column>
           <Grid.Column textAlign="center" width={8}>
