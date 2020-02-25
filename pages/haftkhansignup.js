@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PageContainer from "../components/global/pageContainer";
+import Modal from '../components/events/haftkhanmodal'
 import { Header, Form, Button } from "semantic-ui-react";
 import { postHaftkhanSignup } from "../utils/requests/events";
 import _ from "lodash";
@@ -308,9 +309,11 @@ class HaftkhanSignup extends Component {
                 -
               </Button>
             )}
+            <Modal>
             <Button disabled={!this.canSubmit()} onClick={this.submit} primary>
               ثبت نام
             </Button>
+            </Modal>
           </Form>
         </div>
       </PageContainer>
