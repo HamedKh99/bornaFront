@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactPlayer from "react-player";
 import { getHaftkhanPre } from "../utils/requests/events";
-import { BASE_ADDRESS } from "../utils/api";
+import { BASE_ADDRESS, BASE_IP } from "../utils/api";
 import PageContainer from "../components/global/pageContainer";
 import { Button, Grid, Header, Form, Checkbox } from "semantic-ui-react";
 import Link from 'next/link'
@@ -41,7 +41,7 @@ class HaftkhanPre extends Component {
               <ReactPlayer
                 width="480px"
                 height="360px"
-                url={BASE_ADDRESS + video}
+                url={BASE_IP + video}
                 controls
               />
             </Grid.Column>

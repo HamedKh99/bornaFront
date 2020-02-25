@@ -17,7 +17,7 @@ import {
   Visibility
 } from "semantic-ui-react";
 
-import { BASE_ADDRESS } from '../utils/api';
+import { BASE_ADDRESS, BASE_IP } from '../utils/api';
 import Link from "next/link";
 import { getHomepage } from "../utils/requests/home";
 
@@ -250,7 +250,7 @@ class Home extends Component {
               bordered
               rounded
               size="large"
-              src={BASE_ADDRESS + section.image}
+              src={BASE_IP + section.image}
             />
           </Grid.Column>
         </Grid.Row>
@@ -263,7 +263,7 @@ class Home extends Component {
               bordered
               rounded
               size="large"
-              src={BASE_ADDRESS + section.image}
+              src={BASE_IP + section.image}
             />
           </Grid.Column>
           <Grid.Column textAlign="center" width={8}>
