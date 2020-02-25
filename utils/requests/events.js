@@ -8,7 +8,8 @@ export function getHaftkhanPre() {
 export function postHaftkhanSignup(data) {
     return axios.post(HAFTKHAN_SIGNUP, data, {
         headers : {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'WWW-Authenticate' : 'Basic'
         }
     })
 }
