@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactPlayer from "react-player";
 import { getHaftkhanPre } from "../utils/requests/events";
-import { BASE_ADDRESS, BASE_IP } from "../utils/api";
+import { BASE_IP } from "../utils/api";
 import PageContainer from "../components/global/pageContainer";
 import { Button, Grid, Header, Form, Checkbox } from "semantic-ui-react";
 import Link from 'next/link'

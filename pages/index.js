@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Element, scroller } from "react-scroll";
+import Fade from "react-reveal/Fade";
 import {
   Button,
   Container,
@@ -14,10 +15,11 @@ import {
   Responsive,
   Segment,
   Sidebar,
-  Visibility
+  Visibility,
+  Transition
 } from "semantic-ui-react";
 
-import { BASE_ADDRESS, BASE_IP } from '../utils/api';
+import { BASE_ADDRESS, BASE_IP } from "../utils/api";
 import Link from "next/link";
 import { getHomepage } from "../utils/requests/home";
 
@@ -101,7 +103,7 @@ class DesktopContainer extends Component {
               size="large"
             >
               <Container>
-                {/* <Menu.Item>
+                <Menu.Item>
                   <Button as="a" inverted={!fixed}>
                     ورود
                   </Button>
@@ -113,16 +115,18 @@ class DesktopContainer extends Component {
                   >
                     ثبت نام
                   </Button>
-                </Menu.Item> */}
-                <Menu.Item position="right">
-                  <Menu.Item onClick={this.scrollToContactUs} as="a">تماس با ما</Menu.Item>
+                </Menu.Item>
+                <Menu.Menu position="right" style={{ borderStyle: "none" }}>
+                  <Menu.Item onClick={this.scrollToContactUs} as="a">
+                    تماس با ما
+                  </Menu.Item>
                   <Menu.Item onClick={this.scrollToSections} as="a">
                     بخش ها
                   </Menu.Item>
                   {/* <Menu.Item as="a" active>
                     معرفی
                   </Menu.Item> */}
-                </Menu.Item>
+                </Menu.Menu>
               </Container>
             </Menu>
             <HomepageHeading heading={heading} />
@@ -165,13 +169,8 @@ class MobileContainer extends Component {
           visible={sidebarOpened}
           direction="right"
         >
-          {/* <Menu.Item as="a" active>
-            معرفی
-          </Menu.Item> */}
-          <Menu.Item as="a">بخش ها</Menu.Item>
-          <Menu.Item as="a">تماس با ما</Menu.Item>
-          {/* <Menu.Item as="a">ورود</Menu.Item>
-          <Menu.Item as="a">ثبت نام</Menu.Item> */}
+          <Menu.Item as="a">ورود</Menu.Item>
+          <Menu.Item as="a">ثبت نام</Menu.Item>
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -181,7 +180,7 @@ class MobileContainer extends Component {
             style={{ minHeight: 350, padding: "1em 0em" }}
             vertical
           >
-            {/* <Container>
+            <Container>
               <Menu inverted pointing secondary size="large">
                 <Menu.Item>
                   <Button as="a" inverted>
@@ -195,7 +194,7 @@ class MobileContainer extends Component {
                   <Icon name="sidebar" />
                 </Menu.Item>
               </Menu>
-            </Container> */}
+            </Container>
             <HomepageHeading heading={heading} mobile />
           </Segment>
 
@@ -222,6 +221,10 @@ ResponsiveContainer.propTypes = {
 };
 
 class Home extends Component {
+  state = {
+    sectionsVisibility: [false, false, false, false, false]
+  };
+
   static async getInitialProps(ctx) {
     const res = await getHomepage();
     return {
@@ -232,26 +235,37 @@ class Home extends Component {
     };
   }
 
+  toggleSectionVisibility = index => {
+    // let newState = [...this.state.sectionsVisibility]
+    // newState[index] = !newState[index]
+    // this.setState({sectionsVisibility: newState})
+    console.log(index);
+  };
+
   renderSection = (section, index) => {
     if (index % 2 == 0) {
       return (
         <Grid.Row>
           <Grid.Column textAlign="center" width={8}>
-            <Header as="h3" style={{ fontSize: "2em" }}>
-              {section.title}
-            </Header>
-            <p style={{ fontSize: "1.33em" }}>{section.description}</p>
-            <a href={"/" + section.link_to}>
-              <Button size="huge">ورود به بخش</Button>
-            </a>
+            <Fade left>
+              <Header as="h3" style={{ fontSize: "2em" }}>
+                {section.title}
+              </Header>
+              <p style={{ fontSize: "1.33em" }}>{section.description}</p>
+              <a href={"/" + section.link_to}>
+                <Button size="huge">ورود به بخش</Button>
+              </a>
+            </Fade>
           </Grid.Column>
           <Grid.Column floated="right" width={6}>
-            <Image
-              bordered
-              rounded
-              size="large"
-              src={BASE_IP + section.image}
-            />
+            <Fade right>
+              <Image
+                bordered
+                rounded
+                size="large"
+                src={BASE_IP + section.image}
+              />
+            </Fade>
           </Grid.Column>
         </Grid.Row>
       );
@@ -259,21 +273,25 @@ class Home extends Component {
       return (
         <Grid.Row>
           <Grid.Column floated="left" width={6}>
-            <Image
-              bordered
-              rounded
-              size="large"
-              src={BASE_IP + section.image}
-            />
+            <Fade left>
+              <Image
+                bordered
+                rounded
+                size="large"
+                src={BASE_IP + section.image}
+              />
+            </Fade>
           </Grid.Column>
           <Grid.Column textAlign="center" width={8}>
-            <Header as="h3" style={{ fontSize: "2em" }}>
-              {section.title}
-            </Header>
-            <p style={{ fontSize: "1.33em" }}>{section.description}</p>
-            <a href={"/" + section.link_to}>
-              <Button size="huge">ورود به بخش</Button>
-            </a>
+            <Fade right>
+              <Header as="h3" style={{ fontSize: "2em" }}>
+                {section.title}
+              </Header>
+              <p style={{ fontSize: "1.33em" }}>{section.description}</p>
+              <a href={"/" + section.link_to}>
+                <Button size="huge">ورود به بخش</Button>
+              </a>
+            </Fade>
           </Grid.Column>
         </Grid.Row>
       );
@@ -293,30 +311,30 @@ class Home extends Component {
             </Grid>
           </Segment>
         </Element>
-        <Element name='contactus'>
-        <Segment inverted vertical style={{ padding: "5em 0em" }}>
-          <Container>
-            <Grid divided inverted stackable>
-              <Grid.Row textAlign="center">
-                <Grid.Column width={8}>
-                  <Header inverted as="h4" content="تماس با ما" />
-                  <List link inverted>
-                    <List.Item as="li">
-                      {contactUs.email + "  :ایمیل "}
-                    </List.Item>
-                    <List.Item as="li">
-                      {contactUs.phone_number + "   :تلفن "}
-                    </List.Item>
-                  </List>
-                </Grid.Column>
-                <Grid.Column width={8}>
-                  <Header inverted as="h4" content="شبکه های اجتماعی" />
-                  <List link inverted></List>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Container>
-        </Segment>
+        <Element name="contactus">
+          <Segment inverted vertical style={{ padding: "5em 0em" }}>
+            <Container>
+              <Grid divided inverted stackable>
+                <Grid.Row textAlign="center">
+                  <Grid.Column width={8}>
+                    <Header inverted as="h4" content="تماس با ما" />
+                    <List link inverted>
+                      <List.Item as="li">
+                        {contactUs.email + "  :ایمیل "}
+                      </List.Item>
+                      <List.Item as="li">
+                        {contactUs.phone_number + "   :تلفن "}
+                      </List.Item>
+                    </List>
+                  </Grid.Column>
+                  <Grid.Column width={8}>
+                    <Header inverted as="h4" content="شبکه های اجتماعی" />
+                    <List link inverted></List>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Container>
+          </Segment>
         </Element>
       </ResponsiveContainer>
     );
