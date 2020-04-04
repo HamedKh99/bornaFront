@@ -5,7 +5,6 @@ import Fade from "react-reveal/Fade";
 import {
   Button,
   Container,
-  Divider,
   Grid,
   Header,
   Icon,
@@ -16,11 +15,9 @@ import {
   Segment,
   Sidebar,
   Visibility,
-  Transition
 } from "semantic-ui-react";
 
-import { BASE_ADDRESS, BASE_IP } from "../utils/api";
-import Link from "next/link";
+import { BASE_IP } from "../utils/api";
 import { getHomepage } from "../utils/requests/home";
 
 const getWidth = () => {
@@ -39,7 +36,7 @@ const HomepageHeading = ({ heading, mobile }) => (
         fontSize: mobile ? "2em" : "4em",
         fontWeight: "normal",
         marginBottom: 0,
-        marginTop: mobile ? "1.5em" : "3em"
+        marginTop: mobile ? "1.5em" : "3em",
       }}
     />
     <Header
@@ -49,14 +46,14 @@ const HomepageHeading = ({ heading, mobile }) => (
       style={{
         fontSize: mobile ? "1.5em" : "1.7em",
         fontWeight: "normal",
-        marginTop: mobile ? "0.5em" : "1.5em"
+        marginTop: mobile ? "0.5em" : "1.5em",
       }}
     />
   </Container>
 );
 
 HomepageHeading.propTypes = {
-  mobile: PropTypes.bool
+  mobile: PropTypes.bool,
 };
 
 class DesktopContainer extends Component {
@@ -64,18 +61,25 @@ class DesktopContainer extends Component {
 
   hideFixedMenu = () => this.setState({ fixed: false });
   showFixedMenu = () => this.setState({ fixed: true });
+  scrollToIntroduction = () => {
+    scroller.scrollTo("introduction", {
+      duration: 1500,
+      delay: 0,
+      smooth: "easeInOutQuart",
+    });
+  };
   scrollToSections = () => {
     scroller.scrollTo("sections", {
       duration: 1500,
       delay: 0,
-      smooth: "easeInOutQuart"
+      smooth: "easeInOutQuart",
     });
   };
   scrollToContactUs = () => {
     scroller.scrollTo("contactus", {
       duration: 1500,
       delay: 0,
-      smooth: "easeInOutQuart"
+      smooth: "easeInOutQuart",
     });
   };
   render() {
@@ -123,9 +127,12 @@ class DesktopContainer extends Component {
                   <Menu.Item onClick={this.scrollToSections} as="a">
                     بخش ها
                   </Menu.Item>
-                  {/* <Menu.Item as="a" active>
+                  <Menu.Item onClick={this.scrollToIntroduction} as="a">
                     معرفی
-                  </Menu.Item> */}
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Image size="mini" src="images/logo.png" />
+                  </Menu.Item>
                 </Menu.Menu>
               </Container>
             </Menu>
@@ -140,7 +147,7 @@ class DesktopContainer extends Component {
 }
 
 DesktopContainer.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 class MobileContainer extends Component {
@@ -206,7 +213,7 @@ class MobileContainer extends Component {
 }
 
 MobileContainer.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 const ResponsiveContainer = ({ heading, children }) => (
@@ -217,30 +224,24 @@ const ResponsiveContainer = ({ heading, children }) => (
 );
 
 ResponsiveContainer.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 class Home extends Component {
   state = {
-    sectionsVisibility: [false, false, false, false, false]
+    sectionsVisibility: [false, false, false, false, false],
   };
 
-  static async getInitialProps(ctx) {
+  static async getInitialProps() {
     const res = await getHomepage();
     return {
       heading: res.data.heading,
+      introduction: res.data.introduction,
       sections: res.data.sections,
       contactUs: res.data.contact_us,
-      socialNetworks: res.data.social_networks
+      socialNetworks: res.data.social_networks,
     };
   }
-
-  toggleSectionVisibility = index => {
-    // let newState = [...this.state.sectionsVisibility]
-    // newState[index] = !newState[index]
-    // this.setState({sectionsVisibility: newState})
-    console.log(index);
-  };
 
   renderSection = (section, index) => {
     if (index % 2 == 0) {
@@ -248,7 +249,7 @@ class Home extends Component {
         <Grid.Row>
           <Grid.Column textAlign="center" width={8}>
             <Fade left>
-              <Header as="h3" style={{ fontSize: "2em" }}>
+              <Header inverted as="h3" style={{ fontSize: "2em" }}>
                 {section.title}
               </Header>
               <p style={{ fontSize: "1.33em" }}>{section.description}</p>
@@ -284,7 +285,7 @@ class Home extends Component {
           </Grid.Column>
           <Grid.Column textAlign="center" width={8}>
             <Fade right>
-              <Header as="h3" style={{ fontSize: "2em" }}>
+              <Header inverted as="h3" style={{ fontSize: "2em" }}>
                 {section.title}
               </Header>
               <p style={{ fontSize: "1.33em" }}>{section.description}</p>
@@ -299,11 +300,30 @@ class Home extends Component {
   };
 
   render() {
-    const { heading, sections, contactUs, socialNetworks } = this.props;
+    const { heading, introduction, sections, contactUs } = this.props;
     return (
       <ResponsiveContainer heading={heading}>
+        <Element name="introduction">
+          <Segment style={{ padding: "4em 8em 4em 8em" }} vertical>
+            <Grid container stackable verticalAlign="middle">
+              <Grid.Row>
+                <Grid.Column width={8}>
+                  <Fade up>
+                    <Image size="medium" src={BASE_IP + introduction.logo} />
+                  </Fade>
+                </Grid.Column>
+                <Grid.Column textAlign="center" width={8}>
+                  <Fade up>
+                    <Header as="h1">{introduction.title}</Header>
+                    <p>{introduction.description}</p>
+                  </Fade>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </Element>
         <Element name="sections">
-          <Segment style={{ padding: "8em 0em" }} vertical>
+          <Segment inverted style={{ padding: "8em 0em" }} vertical>
             <Grid container stackable verticalAlign="middle">
               {sections.map((section, index) => {
                 return this.renderSection(section, index);
@@ -312,13 +332,13 @@ class Home extends Component {
           </Segment>
         </Element>
         <Element name="contactus">
-          <Segment inverted vertical style={{ padding: "5em 0em" }}>
+          <Segment vertical style={{ padding: "5em 0em" }}>
             <Container>
               <Grid divided inverted stackable>
                 <Grid.Row textAlign="center">
                   <Grid.Column width={8}>
-                    <Header inverted as="h4" content="تماس با ما" />
-                    <List link inverted>
+                    <Header as="h4" content="تماس با ما" />
+                    <List link>
                       <List.Item as="li">
                         {contactUs.email + "  :ایمیل "}
                       </List.Item>
@@ -328,8 +348,8 @@ class Home extends Component {
                     </List>
                   </Grid.Column>
                   <Grid.Column width={8}>
-                    <Header inverted as="h4" content="شبکه های اجتماعی" />
-                    <List link inverted></List>
+                    <Header as="h4" content="شبکه های اجتماعی" />
+                    <List link></List>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
