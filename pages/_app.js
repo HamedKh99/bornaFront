@@ -11,6 +11,7 @@ class MyApp extends App {
       <Layout>
         <Head>
           <title>موسسه مطالعات تربیتی برنا</title>
+          <link rel='icon' href='/images/logo.png'/>
         </Head>
         <Component {...pageProps} />
       </Layout>

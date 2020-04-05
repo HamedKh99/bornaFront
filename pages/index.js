@@ -18,6 +18,8 @@ import {
 } from "semantic-ui-react";
 
 import { BASE_IP } from "../utils/api";
+import SignupModal from '../components/home/signupModal'
+import LoginModal from '../components/home/loginModal'
 import { getHomepage } from "../utils/requests/home";
 
 const getWidth = () => {
@@ -83,7 +85,7 @@ class DesktopContainer extends Component {
     });
   };
   render() {
-    const { children, heading } = this.props;
+    const { children, heading, showSignup, showLogin } = this.props;
     const { fixed } = this.state;
 
     return (
@@ -108,7 +110,7 @@ class DesktopContainer extends Component {
             >
               <Container>
                 <Menu.Item>
-                  <Button as="a" inverted={!fixed}>
+                  <Button onClick={() => showLogin()} as="a" inverted={!fixed}>
                     ورود
                   </Button>
                   <Button
@@ -116,6 +118,7 @@ class DesktopContainer extends Component {
                     inverted={!fixed}
                     primary={fixed}
                     style={{ marginLeft: "0.5em" }}
+                    onClick={() => showSignup()}
                   >
                     ثبت نام
                   </Button>
@@ -158,7 +161,7 @@ class MobileContainer extends Component {
   handleToggle = () => this.setState({ sidebarOpened: true });
 
   render() {
-    const { children, heading } = this.props;
+    const { children, heading, showLogin, showSignup } = this.props;
     const { sidebarOpened } = this.state;
 
     return (
@@ -176,8 +179,8 @@ class MobileContainer extends Component {
           visible={sidebarOpened}
           direction="right"
         >
-          <Menu.Item as="a">ورود</Menu.Item>
-          <Menu.Item as="a">ثبت نام</Menu.Item>
+          <Menu.Item onClick={() => showLogin()} as="a">ورود</Menu.Item>
+          <Menu.Item onClick={() => showSignup()} as="a">ثبت نام</Menu.Item>
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -190,10 +193,10 @@ class MobileContainer extends Component {
             <Container>
               <Menu inverted pointing secondary size="large">
                 <Menu.Item>
-                  <Button as="a" inverted>
+                  <Button onClick={() => showLogin()} as="a" inverted>
                     ورود
                   </Button>
-                  <Button as="a" inverted style={{ marginLeft: "0.5em" }}>
+                  <Button onClick={() => showSignup()} as="a" inverted style={{ marginLeft: "0.5em" }}>
                     ثبت نام
                   </Button>
                 </Menu.Item>
@@ -216,10 +219,10 @@ MobileContainer.propTypes = {
   children: PropTypes.node,
 };
 
-const ResponsiveContainer = ({ heading, children }) => (
+const ResponsiveContainer = ({ heading, showSignup, showLogin, children }) => (
   <div>
-    <DesktopContainer heading={heading}>{children}</DesktopContainer>
-    <MobileContainer heading={heading}>{children}</MobileContainer>
+    <DesktopContainer showLogin={showLogin} showSignup={showSignup} heading={heading}>{children}</DesktopContainer>
+    <MobileContainer showLogin={showLogin} showSignup={showSignup} heading={heading}>{children}</MobileContainer>
   </div>
 );
 
@@ -229,7 +232,8 @@ ResponsiveContainer.propTypes = {
 
 class Home extends Component {
   state = {
-    sectionsVisibility: [false, false, false, false, false],
+    isSignupOpen : false,
+    isLoginOpen : false
   };
 
   static async getInitialProps() {
@@ -299,10 +303,29 @@ class Home extends Component {
     }
   };
 
+  showSignup = () => {
+    this.setState({isSignupOpen : true})
+  }
+
+  closeSignup = () => {
+    this.setState({isSignupOpen : false})
+  }
+
+  showLogin = () => {
+    this.setState({isLoginOpen : true})
+  }
+
+  closeLogin = () => {
+    this.setState({isLoginOpen : false})
+  }
+
   render() {
+    const {isSignupOpen, isLoginOpen} = this.state
     const { heading, introduction, sections, contactUs } = this.props;
     return (
-      <ResponsiveContainer heading={heading}>
+      <ResponsiveContainer showSignup={this.showSignup} showLogin={this.showLogin} heading={heading}>
+        <SignupModal closeModal={this.closeSignup} open={isSignupOpen}/>
+        <LoginModal closeModal={this.closeLogin} open={isLoginOpen}/>
         <Element name="introduction">
           <Segment style={{ padding: "4em 8em 4em 8em" }} vertical>
             <Grid container stackable verticalAlign="middle">
