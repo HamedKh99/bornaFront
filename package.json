@@ -10,7 +10,7 @@
     "semantic:watch": "cd .semantic && yarn run semantic:build && gulp watch"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "fontfaceobserver": "^2.1.0",
     "loadash": "^1.0.0",
     "next": "9.2.1",
